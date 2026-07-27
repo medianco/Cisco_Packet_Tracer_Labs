@@ -17,7 +17,7 @@ The configuration files are provided to:
 ## Directory Structure
 
 ```text
-configurations/
+Configurations/
 │
 ├── HQ-Router.txt
 ├── Branch-Router.txt

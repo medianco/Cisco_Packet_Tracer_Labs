@@ -59,7 +59,7 @@ Cisco_Packet_Tracer_Labs/
 ├── Lab02_Static_Routing/
 ├── Lab03_VLANs/
 ├── Lab04_OSPF/
-├── Lab05_Enterprise_Hospital_Network/
+├── Proj07_Enterprise_Hospital_Network/
 └── ...
 ```
 

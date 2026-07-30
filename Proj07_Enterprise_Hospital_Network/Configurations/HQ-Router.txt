@@ -1,0 +1,136 @@
+HQ-Router#sho run 
+Building configuration...
+
+Current configuration : 2164 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname HQ-Router
+!
+!
+!
+!
+!
+!
+!
+!
+no ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FTX1524J1IG-
+license boot module c2900 technology-package securityk9
+!
+!
+!
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 5
+!
+crypto isakmp key vpnpa55 address 192.168.102.90
+!
+!
+!
+crypto ipsec transform-set VPN-SET esp-aes esp-sha-hmac
+!
+crypto map VPN-MAP 10 ipsec-isakmp 
+ description This VPN connects to Branch-Network.
+ set peer 192.168.102.90
+ set transform-set VPN-SET 
+ match address 110
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ ip address 192.168.102.86 255.255.255.252
+ ip nat inside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ ip address 192.168.102.82 255.255.255.252
+ ip nat inside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2.70
+ encapsulation dot1Q 70
+ ip address 192.168.102.65 255.255.255.240
+!
+interface Serial0/1/0
+ ip address 195.136.17.1 255.255.255.252
+ ip nat outside
+!
+interface Serial0/1/1
+ ip address 192.168.102.89 255.255.255.252
+ crypto map VPN-MAP
+!
+interface Serial0/2/0
+ ip address 195.136.17.5 255.255.255.252
+ clock rate 2000000
+!
+interface Serial0/2/1
+ no ip address
+ clock rate 2000000
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router ospf 1
+ log-adjacency-changes
+ network 192.168.102.80 0.0.0.3 area 0
+ network 192.168.102.84 0.0.0.3 area 0
+ network 192.168.102.64 0.0.0.15 area 0
+ network 192.168.102.88 0.0.0.3 area 0
+!
+ip nat inside source list 1 interface Serial0/1/0 overload
+ip nat inside source list 2 interface Serial0/2/0 overload
+ip classless
+ip route 0.0.0.0 0.0.0.0 195.136.17.2 
+ip route 0.0.0.0 0.0.0.0 195.136.17.6 10
+!
+ip flow-export version 9
+!
+!
+access-list 1 permit any
+access-list 2 permit any
+access-list 110 permit ip 192.168.100.0 0.0.0.255 192.168.101.0 0.0.0.255
+access-list 110 permit ip 192.168.101.0 0.0.0.127 192.168.101.0 0.0.0.255
+!
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
